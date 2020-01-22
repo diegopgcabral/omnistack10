@@ -46,11 +46,7 @@ export default function Main({ navigation }) {
   function setupWebsocket() {
     const { latitude, longitude } = currentRegion;
 
-    connect({
-      latitude,
-      longitude,
-      techs,
-    });
+    connect(latitude, longitude, techs);
   }
   async function loadDevs() {
     const { latitude, longitude } = currentRegion;
@@ -94,7 +90,7 @@ export default function Main({ navigation }) {
             <Callout
               onPress={() => {
                 navigation.navigate('Profile', {
-                  github_username: 'diegopgcabral',
+                  github_username: dev.github_username,
                 });
               }}
             >
