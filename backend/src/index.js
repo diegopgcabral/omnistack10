@@ -1,9 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require('http');
 const routes = require('./routes');
+const { setupWebsocket } = require('./websocket');
 
 const app = express();
+const server = http.Server(app);
+
+setupWebsocket(server);
 
 mongoose.connect(
   'mongodb+srv://diegopgc:dpgc01@cluster0-uumnm.mongodb.net/test?retryWrites=true&w=majority',

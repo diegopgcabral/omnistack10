@@ -15,6 +15,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 
 import api from '../services/api';
+import { connect, disconnect } from '../services/socket';
 
 export default function Main({ navigation }) {
   const [devs, setDevs] = useState([]);
@@ -42,6 +43,15 @@ export default function Main({ navigation }) {
     loadInitialPosition();
   }, []);
 
+  function setupWebsocket() {
+    const { latitude, longitude } = currentRegion;
+
+    connect({
+      latitude,
+      longitude,
+      techs,
+    });
+  }
   async function loadDevs() {
     const { latitude, longitude } = currentRegion;
 
@@ -54,6 +64,7 @@ export default function Main({ navigation }) {
     });
 
     setDevs(response.data.devs);
+    setupWebsocket();
   }
 
   function handleRegionChanged(region) {
@@ -75,8 +86,8 @@ export default function Main({ navigation }) {
           <Marker
             key={dev._id}
             coordinate={{
-              longitude: dev.location.coordinate[0],
-              latitude: dev.location.coordinate[1],
+              longitude: dev.location.coordinates[0],
+              latitude: dev.location.coordinates[1],
             }}
           >
             <Image style={styles.avatar} source={{ uri: dev.avatar_url }} />
@@ -90,7 +101,7 @@ export default function Main({ navigation }) {
               <View style={styles.callout}>
                 <Text style={styles.devName}>{dev.name}</Text>
                 <Text style={styles.devBio}>{dev.bio}</Text>
-                <Text style={styles.devTechs}>{dev.tech.join(', ')}</Text>
+                <Text style={styles.devTechs}>{dev.techs.join(', ')}</Text>
               </View>
             </Callout>
           </Marker>
